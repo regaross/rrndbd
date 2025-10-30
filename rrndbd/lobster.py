@@ -47,8 +47,6 @@ class LobsterPlot(BasePlot):
         self.add_mass_sum_constraint()
         self.add_beta_decay_constraint()
 
-        self.ax.legend()
-
 
 
     def draw_hierarchies(self, min_masses=None, uncertainty = False):
@@ -115,7 +113,7 @@ class LobsterPlot(BasePlot):
         mmin = nu_e_mass_to_lightest(nu_e_mass)
         meff = nu_e_mass_to_majorana(nu_e_mass)
 
-        self.plot_constraint(mmin, meff, label = label, color = self.colours[2]) 
+        self.plot_constraint(mmin, meff, label = label, color = self.colours[5]) 
 
     def plot_constraint(self, mmin_max, meff_max, label = '', **kwargs):
         '''Taking the two maximum values meff and mmin, we plot a rectangular region on the bottom left of the plot.'''
@@ -129,7 +127,7 @@ class LobsterPlot(BasePlot):
             xmax = mmin_max
 
         self.ax.plot([xmin, xmax, xmax], [ymax, ymax, ymin], linestyle = '--', **kwargs)
-        self.ax.text(xmax*0.9, ymax*0.9, label, va = 'top', ha = 'right', **kwargs)
+        self.ax.text(xmax*0.6, ymax*0.9, label, va = 'top', ha = 'right', **kwargs)
 
 def load_constraints_from_yaml(filename):
 
