@@ -1,0 +1,90 @@
+########################################
+#  FONT AND TEXT
+########################################
+font.family          : Latin Modern Roman       # 'serif', 'sans-serif', or 'monospace'
+font.sans-serif      : DejaVu Sans      # or Helvetica, Arial, etc.
+font.size            : 12
+axes.titlesize       : 14
+axes.titleweight     : bold
+axes.titlepad        : 6
+axes.titlelocation   : center           # 'left', 'center', or 'right'
+axes.labelsize       : 12
+axes.labelweight     : normal
+xtick.labelsize      : 11
+ytick.labelsize      : 11
+legend.fontsize      : 11
+legend.title_fontsize: 12
+legend.frameon       : False
+
+mathtext.fontset     : stix             # Options: dejavusans, stix, cm, custom
+axes.formatter.use_mathtext : True
+
+text.color           : "#131813"
+axes.labelcolor      : "#131813"
+xtick.color          : "#131813"
+ytick.color          : "#131813"
+
+########################################
+#  FIGURE & AXES
+########################################
+figure.dpi           : 120
+savefig.dpi          : 600
+figure.figsize       : 6, 4
+figure.autolayout    : True
+
+figure.facecolor     : white
+axes.facecolor       : "#F2DFC3"
+axes.edgecolor       : "#131813"
+axes.linewidth       : 1.2
+axes.grid            : True
+axes.spines.right    : True
+axes.spines.top      : True
+
+########################################
+#  LINES AND MARKERS
+########################################
+lines.linewidth      : 2
+lines.markersize     : 6
+lines.markeredgewidth: 0.8
+lines.dash_capstyle  : round
+lines.solid_capstyle : round
+
+########################################
+#  COLOR CYCLE (default plotting colors)
+########################################
+axes.prop_cycle      : cycler('color', ["#943225","#40798E","#EAB449","#60722B","#CB5433","#7F58AC","#82583A",])
+
+########################################
+#  GRIDLINES
+########################################
+grid.color           : 0.8
+grid.linestyle       : --
+grid.linewidth       : 0.6
+grid.alpha           : 0.7
+
+########################################
+#  LEGEND
+########################################
+legend.loc           : best
+# legend.frameon       : False
+legend.handlelength  : 2
+legend.handleheight  : 0.8
+
+########################################
+#  TICKS
+########################################
+xtick.direction      : in
+ytick.direction      : in
+xtick.top            : False
+ytick.right          : False
+xtick.major.size     : 6
+ytick.major.size     : 6
+xtick.minor.size     : 3
+ytick.minor.size     : 3
+
+########################################
+#  SAVEFIG
+########################################
+savefig.transparent  : False
+savefig.bbox         : tight
+savefig.pad_inches   : 0.05

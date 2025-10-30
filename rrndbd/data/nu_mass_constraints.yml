@@ -1,0 +1,31 @@
+defaults:
+  cosmology: 'ACT_DR6_2025'
+  ndbd: 'KamLAND-Zen_2024'
+  beta_decay: 'KATRIN_2025'
+
+cosmology:
+  ACT_DR6_2025: # Atacama Cosmology Telescope Data Release 6
+    label: "ACT-DR6 2025"
+    nu_mass_sum: 0.089 # eV 95% Confidence
+    doi: 10.48550/arXiv.2503.14454
+
+beta_decay:
+  KATRIN_2025:
+    label: "KATRIN 2025"
+    nu_e_mass: 0.45 # eV at 90% C.L.
+    doi: 10.1126/science.adq9592
+
+ndbd:
+  EXO-200_2019:
+    label: "EXO-200 2019"
+    eff_maj_mass: [78,239] # meV
+    doi: 10.1103/PhysRevLett.123.161802
+
+  GERDA_2020:
+    label: "GERDA 2020"
+    eff_maj_mass: [70,180] # meV at 90% C.L.
+    doi: 10.1103/PhysRevLett.125.252502
+    
+  KamLAND-Zen_2024:
+    label: "KamLAND-Zen_2024"
+    eff_maj_mass: [28,122] # meV at 90% C.L.
