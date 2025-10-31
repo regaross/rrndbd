@@ -1,0 +1,27 @@
+name,xenon_kg,xe136_percent,status,year,doi
+XENON10,15,8.9,complete,2006,https://doi.org/10.48550/arXiv.0706.0039
+EXO-200,200,80.6,complete,2011,https://doi.org/10.48550/arXiv.1108.4193
+ZEPLIN-I,5,8.9,complete,2005,https://doi.org/10.1016/j.newar.2005.01.045
+ZEPLIN-II,31,8.9,complete,2007,https://doi.org/10.1016/j.astropartphys.2007.06.002
+ZEPLIN-III,12,8.9,complete,2009,https://doi.org/10.1103/PhysRevD.80.052010
+XENON100,165,8.9,complete,2011,https://doi.org/10.48550/arXiv.1207.5988
+LUX,370,8.9,complete,2013,https://doi.org/10.48550/arXiv.1310.8214
+XMASS,835,8.9,complete,2013,https://doi.org/10.48550/arXiv.1301.2815
+NEXT-WHITE,12.5,90,complete,2018,https://doi.org/10.48550/arXiv.1411.2433
+XENON1T,3200,8.9,complete,2017,https://doi.org/10.48550/arXiv.1805.12562
+NEXT-100,100,90,ongoing,2023,https://doi.org/10.22323/1.449.0169
+LZ,7000,8.9,ongoing,2021,https://doi.org/10.48550/arXiv.2410.17036
+KamLAND-Zen 400,380,91,complete,2014,https://doi.org/10.48550/arXiv.1605.02889
+KamLAND-Zen 800,745,91,ongoing,2022,https://doi.org/10.48550/arXiv.2112.04918
+XENONnT,8500,8.9,ongoing,2025,https://doi.org/10.48550/arXiv.2402.10446
+PandaX-I,450,8.9,complete,2015,https://doi.org/10.48550/arXiv.1505.00771
+PandaX-II,450,8.9,complete,2015,https://doi.org/10.48550/arXiv.1505.00771
+PandaX-4T,5600,8.9,ongoing,2021,https://doi.org/10.48550/arXiv.2107.13438
+PandaX-xT,47000,8.9,planned,2032,https://doi.org/10.48550/arXiv.2402.03596
+nEXO,5000,90,planned,2033,https://doi.org/10.48550/arXiv.2106.16243
+XLZD,80000,8.9,planned,2035,https://doi.org/10.48550/arXiv.2404.19524
+NEXT-HD,1109,90,planned,2028,https://doi.org/10.48550/arXiv.2005.06467
+4xNEXT-HD,4436,90,planned,2037,https://indico.ph.tum.de/event/7802/contributions/10295/attachments/6787/9419/NextSummit.pdf
+THEIA-25,2.5e7,8.9,future,2047,https://doi.org/10.48550/arXiv.1911.03501
+THEIA-100,1e8,8.9,future,2050,https://doi.org/10.48550/arXiv.1911.03501
+Origin-X,3e6,8.9,future,2045,https://doi.org/10.48550/arXiv.2110.01537
