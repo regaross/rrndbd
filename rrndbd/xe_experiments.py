@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from .base import BasePlot
 
-XE_EXPS_CSV = './data/xenon_experiments.csv'
+XE_EXPS_CSV = 'rrndbd/data/xenon_experiments.csv'
 XE_EXPS_DF = None
 
 
