@@ -11,7 +11,7 @@ AVAILABLE_THEMES = {
 
 TRADING_CARD_COLOURS = {
     'blue':     '#40798E',
-    'offwhite': '#F2DFC3',
+    'butter':   '#F2DFC3',
     'green':    '#60722B',
     'deepred':  '#943225',
     'yellow':   '#EAB449',
