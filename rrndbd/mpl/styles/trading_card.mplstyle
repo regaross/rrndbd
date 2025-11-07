@@ -33,7 +33,7 @@ figure.figsize       : 6, 4
 figure.autolayout    : True
 
 figure.facecolor     : white
-axes.facecolor       : "F4E8D6"
+axes.facecolor       : "F0EADF"
 axes.edgecolor       : "#131813"
 axes.linewidth       : 1.2
 axes.grid            : True

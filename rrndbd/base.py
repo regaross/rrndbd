@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 from .style import set_plot_style
 
 class BasePlot:
-    def __init__(self, figsize = (6,4)):
+    def __init__(self, figsize = (6,4), **kwargs):
         set_plot_style()
-        self.fig, self.ax = plt.subplots(figsize = figsize)
+        self.fig, self.ax = plt.subplots(figsize = figsize, **kwargs)
         self.colours = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
     def set_labels(self, xlabel = None, ylabel = None, title = None):

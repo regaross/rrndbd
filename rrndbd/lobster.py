@@ -157,7 +157,7 @@ def majorana_mass_bounds(min_masses, inverted = False):
     return min, max
 
 
-def neutrino_masses(mmin, inverted=False):
+def neutrino_masses(mmin, inverted=False, increasing = False):
     '''Returns the neutrino masses based on a minimum mass,
     the squared mass differences, and the assumption that neutrino
     masses are positive values.'''
@@ -166,12 +166,17 @@ def neutrino_masses(mmin, inverted=False):
         m1 = mmin
         m2 = np.sqrt(mmin**2 + DSM21[0], dtype=complex)
         m3 = np.sqrt(m2**2 + abs(DSM32[0]), dtype=complex)
+        return m1.real, m2.real, m3.real
+
     else:               # Inverted hierarchy m3 < m1 < m2
         m3 = mmin
         m2 = np.sqrt(m3**2 + abs(DSM32[0]), dtype=complex)
         m1 = np.sqrt(m2**2 - DSM21[0], dtype=complex)
-
-    return m1.real, m2.real, m3.real
+    
+        if not increasing:
+            return m1.real, m2.real, m3.real
+        else:
+            return m3.real, m1.real, m2.real
 
 
 def eff_majorana_mass(mmin, pa, pb, inverted = False) -> np.ndarray:
