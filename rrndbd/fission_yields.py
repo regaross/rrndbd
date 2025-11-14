@@ -32,14 +32,14 @@ class FissionYieldPlot(BasePlot):
         self.fy.bar(data['a'], data['fiss_sum'], color = self.colours[1], width = width, align = 'center',)
         self.fy.set_xlim(fiss_center - 50, fiss_center + 50)
         self.fy.set_ylim(0,0.5)
-        self.fy.set_ylabel(r'Cumulative Yield per $^{235}$U Fission')
+        self.fy.set_ylabel(r'CFY of $^{235}$U')
         self.fy.set_xlabel(r'Nuclear Mass, A')
 
         if show_be:
             self.be.fill_between(data['a'], min_be, max_be, color = self.colours[0], label = 'All')
-            self.be.plot(mean_be, mean_be, color = self.colours[1], label = "Mean")
-            self.be.set_ylabel(r'Binding Energy / $A$  [MeV]')
-            self.be.set_xlabel(r'Nucleons, $A$')
+            self.be.plot(data['a'], mean_be, color = self.colours[1], label = "Mean")
+            self.be.set_ylabel(r'BE / A  [MeV]')
+            self.be.set_xlabel(r'Nuclear Mass, A')
             self.be.scatter(235, 7.55, color = self.colours[3], s = 60, zorder = 10)
             self.be.text(238, 7.65, r'$^{235}$U')
             left = (78,32)
