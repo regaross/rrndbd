@@ -4,7 +4,10 @@ from scipy.constants import physical_constants
 
 # Module-level cache
 _NEUTRINO_CONSTANTS = None
-ELECTRON_MASS_MEV = physical_constants['electron mass energy equivalent in MeV']
+ELECTRON_MASS_MEV = physical_constants['electron mass energy equivalent in MeV'][0]
+PROTON_MASS_MEV = physical_constants['proton mass energy equivalent in MeV'][0]
+NEUTRON_MASS_MEV = physical_constants['neutron mass energy equivalent in MeV'][0]
+AMU_MEV = physical_constants['atomic mass constant energy equivalent in MeV'][0]
 _PMNS = None
 
 def fetch_neutrino_constants():

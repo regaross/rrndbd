@@ -1,0 +1,15 @@
+name,chem,amu,volume_fraction,total_mass_g,label
+air,Air,28.964,1.0,5.15e21,Air
+nitrogen,N2,28.0134,0.78084,4.02e21,$\mathrm{N_2}$
+oxygen,O2,31.9988,0.209476,1.08e21,$\mathrm{O_2}$
+argon,Ar,39.948,0.00934,6.59e19,$\mathrm{Ar}$
+carbon_dioxide,CO2,44.0095,3.53e-4,2.76e18,$\mathrm{CO_2}$
+neon,Ne,20.183,1.818e-5,9.37e16,$\mathrm{Ne}$
+helium,He,4.002602,5.24e-6,2.70e16,$\mathrm{He}$
+methane,CH4,16.043,1.72e-6,9.27e15,$\mathrm{CH_4}$
+krypton,Kr,83.798,1.14e-6,5.88e15,$\mathrm{Kr}$
+hydrogen,H2,2.01588,5.5e-7,2.83e15,$\mathrm{H_2}$
+nitrous_oxide,N2O,44.013,3.10e-7,1.65e15,$\mathrm{N_2O}$
+carbon_monoxide,CO,28.01,1.2e-7,5.9e14,$\mathrm{CO}$
+ammonia,NH3,17.03,1.00e-7,3.0e1,$\mathrm{NH_3}$
+xenon,Xe,131.293,8.7e-8,2.2e15,$\mathrm{Xe}$

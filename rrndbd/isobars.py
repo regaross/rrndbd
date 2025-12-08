@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+from .constants import PROTON_MASS_MEV, NEUTRON_MASS_MEV, AMU_MEV
 from .base import BasePlot
 
 MASS_FILE = 'rrndbd/data/isobars136.csv'
@@ -33,6 +34,10 @@ class IsobarsPlot(BasePlot):
         self.ax.set_ylim(ISOBARS['massExcess(MeV)'].min() - 2, ISOBARS['massExcess(MeV)'].max() + 2)
         self.ax.set_xlim(ISOBARS['z'].min() - 1, ISOBARS['z'].max() + 2)
 
+        # semf = ISOBARS.sort_values(by = 'z')
+
+        # self.ax.plot(semf['z'], semi_empirical_mass_formula(semf['z'], semf['n']), label = 'SEMF')
+
         self.ax.grid(which = 'both', axis = 'x')
 
         even_even_patch = mpatches.Patch(color=self.colours[0], label='Even–Even')
@@ -52,8 +57,6 @@ class IsobarsPlot(BasePlot):
         self.set_labels('Atomic Number, Z', 'Mass Excess [MeV]')
 
         self.fig.show()
-    
-
 
 
 def get_isobars(filename :str = MASS_FILE, isobar : int = 136, min_max = (53, 60)):
@@ -73,3 +76,28 @@ def get_isobars(filename :str = MASS_FILE, isobar : int = 136, min_max = (53, 60
     ISOBARS = ISOBARS.sort_values('massExcessUncertainty').drop_duplicates(subset=['z', 'n'], keep='first')
 
     return ISOBARS
+
+
+def semi_empirical_mass_formula(z, n, mass_excess = False):
+    '''Returns the value of the semi-empirical mass formula given various fitting parameters. If the "mass excess" option is selected, 
+    The mass result absent the mass value based solely on protons and neutrons is returned.'''
+    
+    v = 15.85
+    s = 18.34
+    c = 0.71
+    a = 92.86
+    d = 11.46
+
+    first = z*PROTON_MASS_MEV + n*NEUTRON_MASS_MEV
+    vol = - v*(z + n)
+    surf = s*(z + n)**(2/3)
+    coul = c * z**2 / (n + z)**(1/3)
+    # asy = a*(n - z)**2 / (n + z)
+    delt = - (((-1)**z + (-1)**n)/2)*(d / np.sqrt(z + n))
+    asy = a*(z - (n + z)/2)**2 / (z + n)
+
+    mass = first + vol + surf + coul + asy + delt
+    if mass_excess:
+        return mass - AMU_MEV*(n + z)
+
+    return mass
