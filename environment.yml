@@ -8,4 +8,6 @@ dependencies:
   - numpy
   - pandas
   - scipy
+  - pdg
+  - pyyaml
 prefix: /Users/rross/miniconda3/envs/rrndbd
