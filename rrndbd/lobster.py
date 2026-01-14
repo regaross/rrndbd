@@ -243,3 +243,23 @@ def nu_e_mass_to_majorana(nu_e_mass, inverted = False):
 
     return eff_majorana_mass(mmin, 0, 0, inverted)
 
+
+def main():
+
+    # Check if we can access the LobsterPlot class
+    try:
+        plot = LobsterPlot()
+        print("✅ Successfully created LobsterPlot instance.")
+    except Exception as e:
+        print("❌ Failed to create LobsterPlot instance:")
+        print(e)
+        return
+
+
+    print("All tests passed!")
+
+    plot.show()
+
+    
+if __name__ == "__main__":
+    main()

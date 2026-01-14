@@ -77,3 +77,11 @@ def get_fission_yields(filename: str = FISSION_FILE):
     )
 
     return grouped
+
+
+def main():
+    FissionYieldPlot()
+
+
+if __name__ == "__main__":
+    main()

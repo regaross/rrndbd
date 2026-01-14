@@ -101,3 +101,13 @@ def semi_empirical_mass_formula(z, n, mass_excess = False):
         return mass - AMU_MEV*(n + z)
 
     return mass
+
+
+def main():
+
+    this_plot = IsobarsPlot()
+    this_plot.show()
+
+
+if __name__ == '__main__':
+    main()

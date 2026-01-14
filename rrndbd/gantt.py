@@ -108,3 +108,13 @@ class GanttChart(BasePlot):
                 # title_fontsize=12, 
                 frameon=True
                 )
+        
+
+
+def main():
+    this_gantt = GanttChart()
+    this_gantt.show()
+
+
+if __name__ == "__main__":
+    main()

@@ -21,7 +21,7 @@ class OrderingPlot(BasePlot):
     mass eigenstates into their flavour components.
     """
 
-    def __init__(self, squared=False, **kwargs):
+    def __init__(self, squared: bool | None=False, **kwargs):
         # Initialize base class with two vertically stacked, shared-x subplots
         super().__init__(nrows=2, sharex=True, gridspec_kw={'hspace': 0}, **kwargs)
 
@@ -154,4 +154,9 @@ class OrderingPlot(BasePlot):
 
 
 
+def main():
+    this_plot = OrderingPlot()
+    this_plot.show()
 
+if __name__ == '__main__':
+    main()
