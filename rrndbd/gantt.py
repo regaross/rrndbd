@@ -10,22 +10,23 @@ from .base import BasePlot
 class GanttChart(BasePlot):
     '''A class for plotting a Gantt chart given a csv file of tasks.'''
 
-    def __init__(self, task_csv = 'rrndbd/data/mitacs_timeline.csv', **kwargs):
+    def __init__(self, task_csv = 'rrndbd/data/mitacs_18_weeks.csv', **kwargs):
         '''Instantiates a Gantt chart'''
 
-        super().__init__(**kwargs)
+        super().__init__(figsize = (8,4), **kwargs)
         
         tasks = self.load_tasks_from_csv(task_csv)
-        self.set_dates(2026, 5, 4)
+        self.set_dates(2026, 4, 27)
         self.set_phase_colours()
 
         ax = self.ax
 
         ax.barh(y = tasks['task'], width = tasks['duration'], left = tasks['start_date'], color = tasks['colour'])
         ax.invert_yaxis()
-        date_form = DateFormatter('%B')
+        date_form = DateFormatter('%B %d')
         ax.xaxis.set_major_formatter(date_form)
         ax.xaxis.set_minor_locator(WeekdayLocator(byweekday=0))
+        # ax.get_yaxis().set_visible(False)
         ax.grid(
             True,
             which="major",
@@ -44,6 +45,9 @@ class GanttChart(BasePlot):
             linestyle="--",
             alpha=0.8,
         )
+
+        # for i, task in tasks.iterrows():
+        #     ax.text(task['start_date'], i, f'  {task['task']}', ha='right', va='center', color='black', fontweight='bold')
 
         # ax.get_yaxis().set_visible(False)
         self.add_legend()
