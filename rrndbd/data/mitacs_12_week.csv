@@ -1,0 +1,14 @@
+,task,start_week,end_week,phase,description,place
+0,Literature Review,0.5,1.0,Pilot,Become familiar with XLZD progress and goals,Home
+1,Code Bootup,1.0,1.5,Pilot,Install dependencies and ensure existing code can run,Home
+2,Project Refinement,1.5,3.0,Pilot,Refine project goals and deliverables as the constraints of the code become clear,Home
+3,Code Proficiency,1.5,5.0,Pilot,Learn what's necessary to run the existing simulations and develop my own contributions,Abroad
+4,Plan Implementation,4.5,5.0,Development,Plan out the implementation of the code; how will we calculate what's desired?,Abroad
+5,Targeted Development,5.0,7.0,Development,Develop bespoke simulation and analysis code for sensitivity studies,Abroad
+6,Test and Document,5.0,10.0,Development,Consistently testing and documenting code development.,Abroad
+7,Tweak Parameters,7.5,8.0,Execution,Tweak and adjust code as necessary to prepare for full-scale simulations,Abroad
+8,Full Scale Simulation,7.5,9.0,Execution,Run some full scale simulations to produce a clean dataset for publication,Abroad
+9,Analysis,9.0,10.0,Execution,Analyze the simulated data to yield the final results,Abroad
+10,Prepare Results and Plots,10.0,11.0,Publication,Prepare plots and results for publication,Abroad
+11,Writing,10.5,12.0,Publication,Draft a paper on the completed work including data and plots,Abroad
+12,Review and Submission,12.0,13.0,Publication,Share the draft with collaborators for rewview before ultimate submission,Abroad
