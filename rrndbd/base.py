@@ -29,6 +29,12 @@ class BasePlot:
         self.ax.set_xscale('log')
         self.ax.set_yscale('log')
 
+    def set_xscale(self, value, **kwargs):
+        self.ax.set_xscale(value, **kwargs)
+
+    def set_yscale(self, value, **kwargs):
+        self.ax.set_yscale(value, **kwargs)
+
 class TwoPanelBasePlot():
     """
     Generic two-panel plot class.
@@ -44,6 +50,9 @@ class TwoPanelBasePlot():
             self.ax1.set_title(title1)
         if title2:
             self.ax2.set_title(title2)
+
+    def set_suptitle(self, suptitle):
+        self.fig.suptitle(suptitle, y=1.01)
 
     def set_labels(self, xlabel=None, ylabel=None, xlabel2=None, ylabel2=None):
         if xlabel:

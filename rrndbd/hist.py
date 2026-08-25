@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -74,8 +76,98 @@ def _prepare_histogram(
     return edges, bin_values, bin_errors
 
 
+def _fill_histogram_band(ax, bins, values, errors, color, alpha=0.25):
+    """Fill a stepwise band from ``values - errors`` to ``values + errors``."""
+    positive = values[values > 0]
+    floor = 1e-2 * positive.min() if positive.size else 1e-6
+    lower = np.maximum(values - errors, floor)
+    upper = values + errors
+    return ax.fill_between(
+        bins,
+        np.r_[lower, lower[-1]],
+        np.r_[upper, upper[-1]],
+        step="post",
+        color=color,
+        alpha=alpha,
+        linewidth=0,
+        zorder=1,
+    )
+
+
+def _remove_errorbar(errorbar):
+    """Remove a matplotlib ErrorbarContainer if one was drawn."""
+    if errorbar is not None:
+        errorbar.remove()
+
+
+def _remove_artist(artist):
+    """Remove a matplotlib artist if one was drawn."""
+    if artist is not None:
+        artist.remove()
+
+
+@dataclass
+class _HistogramSeries:
+    values: np.ndarray
+    errors: np.ndarray | None
+    color: object
+    label: str | None = None
+    line: object = None
+    errorbar: object = None
+    error_band: object = None
+
+
+def _remove_series_artists(spec: _HistogramSeries):
+    """Remove every artist belonging to one histogram series."""
+    _remove_artist(spec.line)
+    _remove_errorbar(spec.errorbar)
+    _remove_artist(spec.error_band)
+    spec.line = None
+    spec.errorbar = None
+    spec.error_band = None
+
+
+def _draw_series(
+    ax,
+    bins,
+    bin_centers,
+    spec: _HistogramSeries,
+    *,
+    alpha=1.0,
+    use_error_bands=False,
+    band_alpha=0.25,
+):
+    """Draw stairs plus error bars or an error band for one series."""
+    spec.line = ax.stairs(
+        spec.values,
+        bins,
+        label=spec.label,
+        color=spec.color,
+        alpha=alpha,
+        zorder=2,
+    )
+    spec.errorbar = None
+    spec.error_band = None
+    if spec.errors is None:
+        return spec
+    if use_error_bands:
+        spec.error_band = _fill_histogram_band(
+            ax, bins, spec.values, spec.errors, spec.color, band_alpha
+        )
+    else:
+        spec.errorbar = ax.errorbar(
+            bin_centers,
+            spec.values,
+            yerr=spec.errors,
+            fmt="none",
+            capsize=2,
+            ecolor=spec.color,
+        )
+    return spec
+
+
 class Histogram(BasePlot):
-    """Plot one histogram from raw data or pre-binned values.
+    """Plot one or more histograms from raw data or pre-binned values.
 
     Raw-data example::
 
@@ -84,6 +176,16 @@ class Histogram(BasePlot):
     Pre-binned example::
 
         plot = Histogram(values=counts, bins=edges, errors=uncertainties)
+
+    Add further series after construction; they reuse the same bins and
+    pick the next color unless ``color`` is given::
+
+        plot.add(data_b, sqrt_n=True, label="B")
+
+    An empty plot with bins preset is also allowed::
+
+        plot = Histogram(bins=edges)
+        plot.add(data_a, sqrt_n=True, label="A")
 
     If raw data are weighted and no error option is supplied, errors are
     computed as ``sqrt(sum(weights**2))`` in each bin.
@@ -104,37 +206,159 @@ class Histogram(BasePlot):
         **kwargs,
     ):
         super().__init__(ax=ax, **kwargs)
-        self.bins, self.values, self.errors = _prepare_histogram(
+        self.series = []
+        self.bins = None
+        self.bin_centers = None
+        self._bin_spec = bins
+        self.alpha = 1.0
+        self._use_error_bands = False
+        self._error_band_alpha = 0.25
+        self._store_bin_edges(bins)
+
+        has_series = data is not None or values is not None
+        if has_series:
+            self.add(
+                data,
+                bins=bins,
+                values=values,
+                weights=weights,
+                errors=errors,
+                sqrt_n=sqrt_n,
+                label=label,
+                color=color,
+            )
+
+    def _store_bin_edges(self, bins):
+        """Record ``bins``; store edges now if they already look like edges."""
+        self._bin_spec = bins
+        if bins is None:
+            return
+        array = np.asarray(bins, dtype=float)
+        if array.ndim == 1 and array.size >= 2 and np.all(np.diff(array) > 0):
+            self.bins = array
+            self.bin_centers = 0.5 * (array[:-1] + array[1:])
+
+    def _first_series(self) -> _HistogramSeries:
+        if not self.series:
+            raise ValueError("Histogram has no series yet")
+        return self.series[0]
+
+    @property
+    def values(self):
+        return self._first_series().values
+
+    @property
+    def errors(self):
+        return self._first_series().errors
+
+    @property
+    def color(self):
+        return self._first_series().color
+
+    @color.setter
+    def color(self, color):
+        self._first_series().color = color
+
+    @property
+    def label(self):
+        return self._first_series().label
+
+    @label.setter
+    def label(self, label):
+        self._first_series().label = label
+
+    def add(
+        self,
+        data=None,
+        *,
+        bins=None,
+        values=None,
+        weights=None,
+        errors=None,
+        sqrt_n: bool = False,
+        label=None,
+        color=None,
+    ):
+        """Add a series, draw it, and return ``self`` for chaining."""
+        if bins is not None:
+            prepare_bins = bins
+        elif self.bins is not None:
+            prepare_bins = self.bins
+        else:
+            prepare_bins = self._bin_spec
+        edges, bin_values, bin_errors = _prepare_histogram(
             data,
-            bins=bins,
+            bins=prepare_bins,
             values=values,
             weights=weights,
             errors=errors,
             sqrt_n=sqrt_n,
         )
-        self.bin_centers = 0.5 * (self.bins[:-1] + self.bins[1:])
-        self.color = color or self.colours[0]
-        self.label = label
-        self.draw()
+        if self.bins is None:
+            self.bins = edges
+            self.bin_centers = 0.5 * (edges[:-1] + edges[1:])
+        elif not np.array_equal(edges, self.bins):
+            raise ValueError("All series must use identical bin edges")
+
+        spec = _HistogramSeries(
+            values=bin_values,
+            errors=bin_errors,
+            color=color or self.colours[len(self.series) % len(self.colours)],
+            label=label,
+        )
+        _draw_series(
+            self.ax,
+            self.bins,
+            self.bin_centers,
+            spec,
+            alpha=self.alpha,
+            use_error_bands=self._use_error_bands,
+            band_alpha=self._error_band_alpha,
+        )
+        self.series.append(spec)
+        if spec.label is not None:
+            self.ax.legend()
+        return self
+
+    def error_bands(self, alpha=0.25):
+        """Replace error bars with a pale histogram-shaped uncertainty band."""
+        if not self.series or all(spec.errors is None for spec in self.series):
+            raise ValueError("Cannot draw an error band without errors")
+        self._use_error_bands = True
+        self._error_band_alpha = alpha
+        bands = []
+        for spec in self.series:
+            if spec.errors is None:
+                continue
+            if spec.error_band is not None:
+                bands.append(spec.error_band)
+                continue
+            _remove_errorbar(spec.errorbar)
+            spec.errorbar = None
+            spec.error_band = _fill_histogram_band(
+                self.ax, self.bins, spec.values, spec.errors, spec.color, alpha
+            )
+            bands.append(spec.error_band)
+        return bands
+
+    draw_error_band = error_bands
 
     def draw(self):
-        """Draw the histogram and return its line and error-bar artists."""
-        line = self.ax.stairs(
-            self.values, self.bins, label=self.label, color=self.color
-        )
-        errorbar = None
-        if self.errors is not None:
-            errorbar = self.ax.errorbar(
+        """Redraw every series and return a list of ``(line, errorbar)`` pairs."""
+        for spec in self.series:
+            _remove_series_artists(spec)
+            _draw_series(
+                self.ax,
+                self.bins,
                 self.bin_centers,
-                self.values,
-                yerr=self.errors,
-                fmt="none",
-                capsize=2,
-                ecolor=self.color,
+                spec,
+                alpha=self.alpha,
+                use_error_bands=self._use_error_bands,
+                band_alpha=self._error_band_alpha,
             )
-        if self.label is not None:
+        if any(spec.label is not None for spec in self.series):
             self.ax.legend()
-        return line, errorbar
+        return [(spec.line, spec.errorbar) for spec in self.series]
 
 
 class HistogramComparison(BasePlot):
@@ -215,6 +439,7 @@ class HistogramComparison(BasePlot):
         self.bin_centers = 0.5 * (self.bins[:-1] + self.bins[1:])
         self.labels = labels
         self.colors = colors
+        self.alpha = 0.75
         self.combined_errors = np.sqrt(self.errors1**2 + self.errors2**2)
         self.residuals = np.divide(
             self.values1 - self.values2,
@@ -222,25 +447,44 @@ class HistogramComparison(BasePlot):
             out=np.full(self.combined_errors.shape, np.nan, dtype=float),
             where=self.combined_errors > 0,
         )
+        self._error_bands = None
         self.draw()
+
+    def error_bands(self, alpha=0.25):
+        """Fill a pale histogram-shaped band between the error bars."""
+        if self.errors1 is None or self.errors2 is None:
+            raise ValueError("Cannot draw an error band without errors")
+        if self._error_bands is not None:
+            return self._error_bands
+        self._error_bands = [
+            _fill_histogram_band(self.ax, self.bins, values, errors, color, alpha)
+            for values, errors, color in zip(
+                (self.values1, self.values2),
+                (self.errors1, self.errors2),
+                self.colors,
+            )
+        ]
+        return self._error_bands
+
+    draw_error_band = error_bands
 
     def draw(self):
         """Draw both series and the residual-significance panel."""
-        for values, errors, label, color in zip(
+        self._error_bands = None
+        for values, label, color in zip(
             (self.values1, self.values2),
-            (self.errors1, self.errors2),
             self.labels,
             self.colors,
         ):
-            self.ax.stairs(values, self.bins, label=label, color=color)
-            self.ax.errorbar(
-                self.bin_centers,
+            self.ax.stairs(
                 values,
-                yerr=errors,
-                fmt="none",
-                capsize=2,
-                ecolor=color,
+                self.bins,
+                label=label,
+                color=color,
+                alpha=self.alpha,
+                zorder=2,
             )
+        self.error_bands()
 
         valid = np.isfinite(self.residuals)
         self.residual_ax.axhline(0, color="black", linestyle="--", linewidth=1)
@@ -260,6 +504,32 @@ class HistogramComparison(BasePlot):
         self.residual_ax.set_ylabel("Residuals")
         self.ax.legend()
         return self.fig, (self.ax, self.residual_ax)
+
+    def set_labels(self, xlabel=None, ylabel=None, title=None):
+        if xlabel:
+            self.residual_ax.set_xlabel(xlabel)
+        if ylabel:
+            self.ax.set_ylabel(ylabel)
+        if title:
+            self.ax.set_title(title)
+
+
+class HistogramOverlay(Histogram):
+    """Overlay several histograms on one axes.
+
+    Each series is a dict accepted by :func:`_prepare_histogram`, plus optional
+    ``label`` and ``color`` keys. All series share the same ``bins``.
+    """
+
+    def __init__(self, series, *, bins=None, ax=None, **kwargs):
+        if not series:
+            raise ValueError("Provide at least one series")
+        super().__init__(bins=bins, ax=ax, **kwargs)
+        for spec in series:
+            spec = dict(spec)
+            label = spec.pop("label", None)
+            color = spec.pop("color", None)
+            self.add(label=label, color=color, **spec)
 
 
 TwoSeriesHistogram = HistogramComparison

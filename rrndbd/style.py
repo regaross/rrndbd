@@ -6,6 +6,7 @@ from pathlib import Path
 STYLE_DIR = Path(__file__).parent / "mpl" / "styles"
 AVAILABLE_THEMES = {
     "trading_card": STYLE_DIR / "trading_card.mplstyle",
+    "clean_modern": STYLE_DIR / "clean_modern.mplstyle",
 }
 
 
@@ -21,7 +22,7 @@ TRADING_CARD_COLOURS = {
     'brown':    '#82583A',
 }
 
-def set_plot_style(theme : str = 'trading_card'):
+def set_plot_style(theme : str = 'clean_modern'):
     '''Given a specific theme (mplstyle file), this function just turns it on.'''
     
     # Apply the chosen style
