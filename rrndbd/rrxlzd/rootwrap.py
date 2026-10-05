@@ -32,7 +32,6 @@ class Simulation:
                     raise RuntimeError("Simulation is not boosted.", '\n', message_add_on)
 
 
-
     def seetrees(self) -> None:
         '''Displays the structure of the Ttree'''
 
@@ -49,7 +48,34 @@ class Simulation:
 
     def __getitem__(self, key):
         return self.file[key]
-    
+
+    def split_histories(self):
+        '''This splits the histories branch of "deposits" into individual histories:
+        [0, 1, 2, 3, 0, 1, 2, 4, 0, 1, 5, 0, 6, 7, 0, 6, 8]
+        to
+        [[0, 1, 2, 3], [0, 1, 2, 4], [0, 1, 5], [0, 6, 7], [0, 6, 8]]
+        '''
+
+        hists = self.deposits["histories"].array(library="ak")
+
+        starts = ak.local_index(hists, axis=1)[hists == 0]
+
+        boundaries = ak.concatenate(
+            [starts, ak.singletons(ak.num(hists, axis=1))],
+            axis=1,
+        )
+
+        lengths = boundaries[:, 1:] - boundaries[:, :-1]
+
+        groups = ak.unflatten(
+            ak.flatten(hists, axis=None),
+            ak.flatten(lengths, axis=None),
+        )
+
+        return ak.unflatten(
+            groups,
+            ak.num(lengths, axis=1),
+        )
 
     def deposits_by_lineage(self):
         '''Attach each history's deposit hits onto eventBiasing (one row per lineage).'''
@@ -106,16 +132,31 @@ class Simulation:
         # Important: avoid deep nested broadcasting between scalar and jagged fields
         return ak.zip(out, depth_limit=1)
 
+def load_sims(path, how_many : int = 0) -> list[Simulation]:
+    '''Load all of the ROOT files in a directory as Simulation objects'''
+
+    import os
+
+    sims = []
+    files = os.listdir(path)
+
+    if how_many == 0:
+        # Grab all.
+        how_many = len(files)
+
+    elif how_many > len(files):
+        raise ValueError('There aren\'t that many files to parse!')
 
 
+    for file in files[:how_many]:
+        if file.endswith('.root'):
+            this_sim = Simulation(os.path.join(path, file))
+            n_primaries = this_sim.event['EventID'].num_entries
+            print('Loaded ' + file + ' with', n_primaries, 'primaries.')
+            sims.append(this_sim)
 
 
-
-
-
-
-
-
+    return sims
 
 
 
